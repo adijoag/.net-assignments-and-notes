@@ -1,0 +1,43 @@
+using System.Data.SqlClient;
+using Models;
+namespace DAL
+{
+ public class UserDAL
+ {
+ private string connectionString =
+ "Server=localhost;Database=AuthDB;Trusted_Connection=True;";
+ public bool ValidateUser(User user)
+ {
+ using (SqlConnection con = new SqlConnection(connectionString))
+ {
+ string query = "SELECT COUNT(*) FROM Users WHERE Username=@u AND Password=@p";
+ SqlCommand cmd = new SqlCommand(query, con);
+ cmd.Parameters.AddWithValue("@u", user.Username);
+ cmd.Parameters.AddWithValue("@p", user.Password);
+ con.Open();
+ int count = (int)cmd.ExecuteScalar();
+ return count == 1;
+ }
+ }
+ public bool AddUser(User user)
+ {
+ using (SqlConnection con = new SqlConnection(connectionString))
+ {
+ string query = "INSERT INTO Users (Username, Password) VALUES (@u,@p)";
+ SqlCommand cmd = new SqlCommand(query, con);
+ cmd.Parameters.AddWithValue("@u", user.Username);
+ cmd.Parameters.AddWithValue("@p", user.Password);
+ try
+ {
+ con.Open();
+ cmd.ExecuteNonQuery();
+ return true;
+ }
+ catch
+ {
+ return false;
+ }
+ }
+ }
+ }
+}
