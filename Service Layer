@@ -1,0 +1,27 @@
+using DAL;
+using Models;
+namespace Services
+{
+ public class UserService
+ {
+ UserDAL userDAL = new UserDAL();
+ public bool Login(string username, string password)
+ {
+ User user = new User
+ {
+ Username = username,
+ Password = password
+ };
+ return userDAL.ValidateUser(user);
+ }
+ public bool Register(string username, string password)
+ {
+ User user = new User
+ {
+ Username = username,
+ Password = password
+ };
+ return userDAL.AddUser(user);
+ }
+ }
+}
